@@ -922,6 +922,16 @@ jobs:
             echo "No machine-local Gradle JDK override found; using hosted JAVA_HOME=$JAVA_HOME." | tee -a "$LOG"
           fi
           echo "GRADLE_OPTS=-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false" >> "$GITHUB_ENV"
+          # Auto-enable AndroidX if not specified
+          if [ -f "$PROJECT_ROOT/gradle.properties" ]; then
+            if ! grep -q "android.useAndroidX" "$PROJECT_ROOT/gradle.properties"; then
+              echo "android.useAndroidX=true" >> "$PROJECT_ROOT/gradle.properties"
+              echo "Auto-added android.useAndroidX=true to gradle.properties" | tee -a "$LOG"
+            fi
+          else
+            echo "android.useAndroidX=true" > "$PROJECT_ROOT/gradle.properties"
+            echo "Auto-created gradle.properties with android.useAndroidX=true" | tee -a "$LOG"
+          fi
           upgraded=0
           while IFS= read -r -d '' wrapper_file; do
             current_version="$(grep -oE 'gradle-[0-9]+\.[0-9]+(\.[0-9]+)?-(bin|all)\.zip' "$wrapper_file" | head -n 1 | sed -E 's/^gradle-//; s/-(bin|all)\.zip$//')"

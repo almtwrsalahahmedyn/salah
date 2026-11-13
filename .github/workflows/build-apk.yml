@@ -1195,10 +1195,7 @@ jobs:
             echo "Preflight passed: Flutter analyzer found no Dart issues." | tee -a "$LOG"
           fi
           flutter doctor -v 2>&1 | tee -a "$LOG" || true
-          bash "$TRY" "flutter build apk" \
-            "flutter build apk --release && cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-universal-release.apk && flutter build apk --release --split-per-abi" \
-            "flutter build apk --release" \
-            "flutter build apk --release --target-platform android-arm,android-arm64"
+          bash "" "flutter build apk" \n            "flutter build apk --release && (cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-universal-release.apk 2>/dev/null || true) && flutter build apk --release --split-per-abi" \n            "flutter build apk --release" \n            "flutter build apk --release --target-platform android-arm,android-arm64"
       - name: Generate Android project and build Expo APK
         if: steps.inspect.outputs.project_type == 'expo'
         shell: bash
